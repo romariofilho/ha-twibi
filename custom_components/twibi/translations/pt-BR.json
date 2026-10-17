@@ -1,0 +1,188 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Intelbras Twibi",
+        "description": "IP do Twibi principal (gateway) e a senha de login do app.",
+        "data": {
+          "host": "IP do Twibi principal",
+          "password": "Senha de login (admin)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Senha do Twibi",
+        "description": "O Twibi recusou a senha salva. Informe a senha de login atual.",
+        "data": {
+          "password": "Senha de login (admin)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Não foi possível conectar ao Twibi (porta 9000).",
+      "invalid_auth": "Senha recusada pelo Twibi."
+    },
+    "abort": {
+      "already_configured": "Este sistema Twibi já está configurado.",
+      "reauth_successful": "Senha atualizada."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opções do Twibi",
+        "data": {
+          "scan_interval": "Intervalo de consulta (segundos)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "wan_link": {
+        "name": "Cabo de internet"
+      },
+      "wan_connected": {
+        "name": "Internet"
+      },
+      "node_online": {
+        "name": "Online"
+      }
+    },
+    "button": {
+      "reboot": {
+        "name": "Reiniciar sistema Twibi"
+      }
+    },
+    "device_tracker": {
+      "client": {
+        "name": "Aparelho"
+      }
+    },
+    "sensor": {
+      "clients_online": {
+        "name": "Aparelhos conectados"
+      },
+      "wan_ip": {
+        "name": "IP da internet (WAN)"
+      },
+      "wan_gateway": {
+        "name": "Gateway da WAN"
+      },
+      "wan_dns": {
+        "name": "DNS da WAN"
+      },
+      "wan_ipv6": {
+        "name": "IPv6 da WAN"
+      },
+      "wan_upload": {
+        "name": "Upload"
+      },
+      "wan_download": {
+        "name": "Download"
+      },
+      "reserved_ips": {
+        "name": "IPs reservados"
+      },
+      "auto_reboot_time": {
+        "name": "Reinício automático"
+      },
+      "node_clients": {
+        "name": "Aparelhos neste nó"
+      },
+      "node_backhaul": {
+        "name": "Sinal do link mesh"
+      },
+      "node_boot": {
+        "name": "Ligado desde"
+      },
+      "node_ip": {
+        "name": "IP do nó"
+      }
+    },
+    "switch": {
+      "guest_wifi": {
+        "name": "Wi-Fi de convidados"
+      },
+      "auto_reboot": {
+        "name": "Reinício automático diário"
+      },
+      "led": {
+        "name": "LED"
+      }
+    }
+  },
+  "services": {
+    "reserve_ip": {
+      "name": "Reservar IP",
+      "description": "Fixa um IP para o aparelho (reserva DHCP). O Twibi reinicia o Wi-Fi (~30 s). O aparelho precisa estar conectado.",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "MAC do aparelho"
+        },
+        "ip": {
+          "name": "IP",
+          "description": "IP a reservar"
+        }
+      }
+    },
+    "remove_reservation": {
+      "name": "Remover reserva de IP",
+      "description": "Remove a reserva DHCP do aparelho. O Twibi reinicia o Wi-Fi.",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "MAC do aparelho"
+        }
+      }
+    },
+    "rename_device": {
+      "name": "Renomear aparelho",
+      "description": "Define o apelido do aparelho no app do Twibi (não reinicia nada).",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "MAC do aparelho"
+        },
+        "name": {
+          "name": "Nome",
+          "description": "Novo apelido"
+        }
+      }
+    },
+    "rename_devices": {
+      "name": "Renomear vários aparelhos",
+      "description": "Define vários apelidos de uma vez ({MAC: nome}).",
+      "fields": {
+        "names": {
+          "name": "Nomes",
+          "description": "Dicionário MAC → apelido"
+        }
+      }
+    },
+    "block_device": {
+      "name": "Bloquear aparelho",
+      "description": "Coloca o aparelho na lista negra do Twibi (sem acesso à rede).",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "MAC do aparelho"
+        }
+      }
+    },
+    "unblock_device": {
+      "name": "Desbloquear aparelho",
+      "description": "Tira o aparelho da lista negra do Twibi.",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "MAC do aparelho"
+        }
+      }
+    },
+    "list_devices": {
+      "name": "Listar aparelhos",
+      "description": "Devolve todos os aparelhos (IP, MAC, apelido, reserva, bloqueio, nó)."
+    }
+  }
+}

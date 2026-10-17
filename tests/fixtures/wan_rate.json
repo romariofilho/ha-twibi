@@ -1,0 +1,9 @@
+{
+ "wan": [
+  {
+   "idx": 0,
+   "uprate": 2,
+   "downrate": 3
+  }
+ ]
+}

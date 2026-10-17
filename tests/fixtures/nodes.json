@@ -1,0 +1,52 @@
+{
+ "node": [
+  {
+   "assoc_list": [
+    {
+     "assoc_sn": "TWIBISN000001",
+     "wl2g_rssi": -56,
+     "wl5g_rssi": -45
+    }
+   ],
+   "serialNum": "TWIBISN000002",
+   "role": 0,
+   "status": 1,
+   "location": "Cozinha",
+   "led": 1,
+   "mode": "Twibi Giga",
+   "fwversion": "1.1.9",
+   "ipaddr": "10.1.1.136",
+   "ethaddr_l": "02:00:00:00:00:18",
+   "ethaddr_r": "02:00:00:00:00:20",
+   "bssid_nband": "02:00:00:00:00:19",
+   "bssid_aband": "02:00:00:00:00:21",
+   "time": "17-10-2026 00:16:45",
+   "ipv6addr": "fe80::0200:0ff:fe00:2501/64",
+   "powered_time": 1709
+  },
+  {
+   "assoc_list": [
+    {
+     "assoc_sn": "TWIBISN000002",
+     "wl2g_rssi": -48,
+     "wl5g_rssi": -48
+    }
+   ],
+   "serialNum": "TWIBISN000001",
+   "role": 1,
+   "status": 1,
+   "location": "Sala",
+   "led": 1,
+   "mode": "Twibi Giga",
+   "fwversion": "1.1.9",
+   "ipaddr": "10.1.1.1",
+   "ethaddr_l": "02:00:00:00:00:14",
+   "ethaddr_r": "02:00:00:00:00:16",
+   "bssid_nband": "02:00:00:00:00:15",
+   "bssid_aband": "02:00:00:00:00:17",
+   "time": "17-10-2026 00:16:45",
+   "ipv6addr": "fe80::0200:0ff:fe00:2501/64",
+   "powered_time": 6267
+  }
+ ]
+}

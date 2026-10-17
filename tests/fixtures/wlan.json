@@ -1,0 +1,23 @@
+{
+ "wlan": [
+  {
+   "band": 0,
+   "ssid": "MinhaRede1",
+   "passwd": "xxxxxxxxxxxxx",
+   "sec": "aes",
+   "left": -1,
+   "timeout": -1,
+   "security_mode": "psk psk2"
+  },
+  {
+   "band": 1,
+   "ssid": "MinhaRede1",
+   "passwd": "xxxxxxxxxxxxx",
+   "sec": "aes",
+   "left": -1,
+   "timeout": -1,
+   "security_mode": "psk psk2"
+  }
+ ],
+ "timestamp": 1792206074349
+}

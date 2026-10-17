@@ -1,0 +1,31 @@
+{
+ "options": [
+  {
+   "enable": 1,
+   "ifname": "br0",
+   "gateway": "10.1.1.1",
+   "mask": "255.0.0.0",
+   "start_ip": "10.1.1.31",
+   "end_ip": "10.1.1.254",
+   "lease": 86400,
+   "dns1": "10.1.1.1",
+   "dns2": "",
+   "pool_type": "host"
+  },
+  {
+   "enable": 1,
+   "ifname": "br0",
+   "gateway": "10.1.1.1",
+   "mask": "255.0.0.0",
+   "start_ip": "10.1.1.31",
+   "end_ip": "10.1.1.254",
+   "lease": 86400,
+   "dns1": "10.1.1.1",
+   "dns2": "",
+   "pool_type": "dev"
+  }
+ ],
+ "lanip": "10.1.1.1",
+ "dhcpmask": "255.0.0.0",
+ "timestamp": 1792206074349
+}

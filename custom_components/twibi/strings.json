@@ -1,0 +1,188 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Intelbras Twibi",
+        "description": "IP of the main Twibi (gateway) and the app login password.",
+        "data": {
+          "host": "Main Twibi IP",
+          "password": "Login password (admin)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Twibi password",
+        "description": "The Twibi rejected the stored password. Enter the current login password.",
+        "data": {
+          "password": "Login password (admin)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to the Twibi (port 9000).",
+      "invalid_auth": "Password rejected by the Twibi."
+    },
+    "abort": {
+      "already_configured": "This Twibi system is already configured.",
+      "reauth_successful": "Password updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Twibi options",
+        "data": {
+          "scan_interval": "Polling interval (seconds)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "wan_link": {
+        "name": "Internet cable"
+      },
+      "wan_connected": {
+        "name": "Internet"
+      },
+      "node_online": {
+        "name": "Online"
+      }
+    },
+    "button": {
+      "reboot": {
+        "name": "Restart Twibi system"
+      }
+    },
+    "device_tracker": {
+      "client": {
+        "name": "Device"
+      }
+    },
+    "sensor": {
+      "clients_online": {
+        "name": "Connected devices"
+      },
+      "wan_ip": {
+        "name": "WAN IP"
+      },
+      "wan_gateway": {
+        "name": "WAN gateway"
+      },
+      "wan_dns": {
+        "name": "WAN DNS"
+      },
+      "wan_ipv6": {
+        "name": "WAN IPv6"
+      },
+      "wan_upload": {
+        "name": "Upload"
+      },
+      "wan_download": {
+        "name": "Download"
+      },
+      "reserved_ips": {
+        "name": "Reserved IPs"
+      },
+      "auto_reboot_time": {
+        "name": "Automatic restart"
+      },
+      "node_clients": {
+        "name": "Devices on this node"
+      },
+      "node_backhaul": {
+        "name": "Mesh link signal"
+      },
+      "node_boot": {
+        "name": "Up since"
+      },
+      "node_ip": {
+        "name": "Node IP"
+      }
+    },
+    "switch": {
+      "guest_wifi": {
+        "name": "Guest Wi-Fi"
+      },
+      "auto_reboot": {
+        "name": "Daily automatic restart"
+      },
+      "led": {
+        "name": "LED"
+      }
+    }
+  },
+  "services": {
+    "reserve_ip": {
+      "name": "Reserve IP",
+      "description": "Reserve a DHCP IP for a device. The Twibi restarts its Wi-Fi (~30 s). The device must be connected.",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "Device MAC"
+        },
+        "ip": {
+          "name": "IP",
+          "description": "IP to reserve"
+        }
+      }
+    },
+    "remove_reservation": {
+      "name": "Remove IP reservation",
+      "description": "Remove the device's DHCP reservation. The Twibi restarts its Wi-Fi.",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "Device MAC"
+        }
+      }
+    },
+    "rename_device": {
+      "name": "Rename device",
+      "description": "Set the device nickname shown in the Twibi app (no restart).",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "Device MAC"
+        },
+        "name": {
+          "name": "Name",
+          "description": "New nickname"
+        }
+      }
+    },
+    "rename_devices": {
+      "name": "Rename devices",
+      "description": "Set many nicknames at once ({MAC: name}).",
+      "fields": {
+        "names": {
+          "name": "Names",
+          "description": "Dictionary MAC → nickname"
+        }
+      }
+    },
+    "block_device": {
+      "name": "Block device",
+      "description": "Blacklist the device on the Twibi (no network access).",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "Device MAC"
+        }
+      }
+    },
+    "unblock_device": {
+      "name": "Unblock device",
+      "description": "Remove the device from the Twibi blacklist.",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "Device MAC"
+        }
+      }
+    },
+    "list_devices": {
+      "name": "List devices",
+      "description": "Return all devices (IP, MAC, nickname, reservation, block, node)."
+    }
+  }
+}

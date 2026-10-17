@@ -1,0 +1,220 @@
+{
+ "err_code": 0,
+ "basic": {
+  "supt_mod_flag": [
+   {
+    "supt_cmd": [
+     6,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     16777216
+    ]
+   },
+   {
+    "supt_cmd": [
+     8,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     68096,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     2,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     127,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     767,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     415,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     1023,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     23,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     3,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     63,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     1073750015,
+     120,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     19,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "supt_cmd": [
+     0,
+     0,
+     0
+    ]
+   }
+  ],
+  "sn": "TWIBISN000001",
+  "product": {
+   "firm": "",
+   "model": "",
+   "soft_ver": "",
+   "hard_ver": "",
+   "release_date": 0
+  },
+  "init": {
+   "guide_done": 1
+  },
+  "mac": "02:00:00:00:00:14",
+  "wl_mode": 0,
+  "supt_wan_type": "static,dhcp,adsl,rsadsl,rsapptp,rsal2tp,ap",
+  "dev_mode": 2,
+  "mesh_id": "itb00000001",
+  "product_id": "Intelbras"
+ }
+}

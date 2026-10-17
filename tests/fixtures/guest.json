@@ -1,0 +1,33 @@
+{
+ "wlan": [
+  {
+   "band": 0,
+   "ssid": "Visitante",
+   "passwd": "xxxxxxxx",
+   "sec": "aes",
+   "limite": 0,
+   "timeout": 28800,
+   "up_limit": 0,
+   "security_mode": "psk2"
+  },
+  {
+   "band": 1,
+   "ssid": "Visitante",
+   "passwd": "xxxxxxxx",
+   "sec": "aes",
+   "limite": 0,
+   "timeout": 28800,
+   "up_limit": 0,
+   "security_mode": "psk2"
+  }
+ ],
+ "timeout": {
+  "option": [
+   14400,
+   28800,
+   -1
+  ]
+ },
+ "timestamp": 1792206074349,
+ "enable": false
+}

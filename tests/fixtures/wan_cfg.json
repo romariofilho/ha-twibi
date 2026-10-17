@@ -1,0 +1,88 @@
+{
+ "wan": [
+  {
+   "idx": 0,
+   "mode": 0,
+   "adsl": {
+    "uname": "",
+    "passwd": "",
+    "dns": {
+     "automic": true,
+     "dns1": "",
+     "dns2": "",
+     "preipv6dns": "",
+     "altipv6dns": ""
+    },
+    "mtu": 1480,
+    "service_name": "",
+    "server_name": ""
+   },
+   "static_info": {
+    "ipaddr": "",
+    "mask": "",
+    "gateway": "",
+    "dns": {
+     "automic": true,
+     "dns1": "",
+     "dns2": ""
+    }
+   },
+   "dhcp": {
+    "dns": {
+     "automic": true,
+     "dns1": "",
+     "dns2": "",
+     "preipv6dns": "",
+     "altipv6dns": ""
+    }
+   },
+   "rsadsl": {
+    "uname": "",
+    "passwd": "",
+    "mtu": 1480,
+    "autoIp": true,
+    "service": "",
+    "srvName": "",
+    "netcfg": {
+     "automic": true,
+     "ipaddr": "",
+     "mask": "",
+     "gateway": "",
+     "dns1": "",
+     "dns2": ""
+    }
+   },
+   "rsapptp": {
+    "pptpSrv": "",
+    "uname": "",
+    "passwd": "",
+    "mtu": 1452,
+    "autoIp": true,
+    "netcfg": {
+     "automic": true,
+     "ipaddr": "",
+     "mask": "",
+     "gateway": "",
+     "dns1": "",
+     "dns2": ""
+    }
+   },
+   "rsal2tp": {
+    "l2tpSrv": "",
+    "uname": "",
+    "passwd": "",
+    "mtu": 1460,
+    "autoIp": true,
+    "netcfg": {
+     "automic": true,
+     "ipaddr": "",
+     "mask": "",
+     "gateway": "",
+     "dns1": "",
+     "dns2": ""
+    }
+   }
+  }
+ ],
+ "timestamp": 1792206074349
+}
