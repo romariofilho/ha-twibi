@@ -48,11 +48,6 @@
         "name": "Online"
       }
     },
-    "button": {
-      "reboot": {
-        "name": "Reiniciar sistema Twibi"
-      }
-    },
     "device_tracker": {
       "client": {
         "name": "Aparelho"

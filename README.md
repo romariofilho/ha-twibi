@@ -40,7 +40,6 @@ Um dispositivo por nó do mesh (ex.: *Twibi Sala* = principal, *Twibi Cozinha*).
 | `switch` *LED* (por nó) | LED de status |
 | `switch` *Reinício automático diário* | manutenção automática do app |
 | `switch` *Acesso à rede: <aparelho>* | **desativados por padrão**; desligar = lista negra do Twibi |
-| `button` *Reiniciar sistema Twibi* | reinicia todos os nós (internet cai ~1–2 min) |
 | `device_tracker` por aparelho | casa/fora pelo Twibi; atributos: nó, sinal, 2.4/5 GHz/cabo, IP reservado, bloqueado |
 
 Rastreadores ficam **ativos** para aparelhos que o HA já conhece pelo MAC (Sonoff, TVs, etc.)
@@ -61,6 +60,7 @@ o app do HA no celular continua sendo melhor.
 
 ## Avisos
 
+- **O relógio do Twibi não acerta a hora pela internet** (fw 1.1.9): ele conta a partir de 01/05/2011 00:00 desde que liga. A "manutenção automática às 03:00" na prática é "3 h depois de ligar, e a cada 24 h" — e com `delay` ligado ela espera a rede ficar ociosa, então pode nem acontecer.
 - **Reserva de IP reinicia o Wi-Fi do Twibi.** Se o próprio HA estiver no Wi-Fi, ele cai junto
   (o HAOS às vezes não reconecta sozinho — veja o "vigia do Wi-Fi" no repositório pai).
 - O comando de **reset de fábrica (0x0102) é bloqueado** na biblioteca de propósito.
@@ -77,7 +77,7 @@ o app do HA no celular continua sendo melhor.
 | Wi-Fi de convidados liga/desliga | ✅ (não reinicia o Wi-Fi principal) |
 | Reinício automático liga/desliga | ✅ |
 | Bloquear/desbloquear aparelho | ✅ entra/sai da lista negra; **efeito no aparelho não verificado** |
-| Reiniciar sistema | ⚠️ implementado, **não testado** (reiniciaria a casa de madrugada) |
+| Reiniciar sistema | ❌ **não suportado** pelo Twibi Giga fw 1.1.9: o comando 0x0103 é ignorado (não está no `supt_mod_flag`) e nem o app oferece. Botão removido em 2026-10-18. A manutenção agendada também não serve de atalho (agendar para daqui a 2 min não reiniciou) |
 
 ## Desenvolvimento
 

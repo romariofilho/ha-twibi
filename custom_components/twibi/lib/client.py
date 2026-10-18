@@ -30,7 +30,7 @@ SRC_APP = 7
 REQ_BASIC_INFO = 0x0100
 REQ_LOGIN = 0x1801
 REQ_NODES = 0x1100
-REQ_REBOOT = 0x0103          # reinicia o sistema mesh inteiro
+REQ_REBOOT = 0x0103          # reinicio do sistema: o Twibi Giga fw 1.1.9 IGNORA (fora do supt_mod_flag)
 REQ_FACTORY_RESET = 0x0102   # NUNCA enviar -- bloqueado em _request()
 REQ_NODE_LED = 0x1104        # Node.NodeLedStatus {serialNum, lev 0/1}
 REQ_HOSTS = 0x1400
@@ -266,12 +266,6 @@ class TwibiClient:
         if time_hhmm is not None:
             data["time"] = time_hhmm
         await self.command(REQ_SET_AUTOMAINT, "Advance.AutoMaint", data)
-
-    async def reboot(self) -> None:
-        """Reinicia todo o sistema mesh (internet cai ~1-2 min)."""
-        async with self._lock:
-            await self._request(REQ_REBOOT)
-
 
 def _fields(msg: str):
     from .schema import SCHEMA
