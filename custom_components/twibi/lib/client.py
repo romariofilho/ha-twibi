@@ -44,6 +44,8 @@ REQ_WAN_RATE = 0x1208
 REQ_WLAN = 0x1301
 REQ_SET_GUEST = 0x1302
 REQ_GUEST = 0x1303
+REQ_ROAMING = 0x1304
+REQ_SET_ROAMING = 0x1305     # reinicia o Wi-Fi (~60 s)
 REQ_MACFILTER = 0x1500
 REQ_SET_MACFILTER = 0x1501
 REQ_AUTOMAINT = 0x1704
@@ -60,6 +62,7 @@ RESPONSE_MSG = {
     REQ_WAN_RATE: "Wan.WanRate",
     REQ_WLAN: "Wlan.WlanCfgAll",
     REQ_GUEST: "Wlan.WlanCfgAll",
+    REQ_ROAMING: "Wlan.WlanRoaming",
     REQ_MACFILTER: "Macfilter.mf_lists",
     REQ_AUTOMAINT: "Advance.AutoMaint",
     REQ_DHCP: "Advance.DhcpCfg",
@@ -205,6 +208,9 @@ class TwibiClient:
     async def guest(self) -> dict[str, Any]:
         return await self.request(REQ_GUEST)
 
+    async def roaming(self) -> dict[str, Any]:
+        return await self.request(REQ_ROAMING)
+
     async def macfilter(self) -> dict[str, Any]:
         return await self.request(REQ_MACFILTER)
 
@@ -242,6 +248,10 @@ class TwibiClient:
         if cur.get("timeout"):
             data["timeout"] = cur["timeout"]
         await self.command(REQ_SET_GUEST, "Wlan.WlanCfgAll", data)
+
+    async def set_roaming(self, enable: bool) -> None:
+        """Roaming rapido do mesh. ATENCAO: o Twibi reinicia o Wi-Fi (~60 s)."""
+        await self.command(REQ_SET_ROAMING, "Wlan.WlanRoaming", {"enable": enable})
 
     async def blocked(self) -> dict[str, str]:
         """Aparelhos na lista negra {mac: nome}."""

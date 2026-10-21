@@ -1,4 +1,4 @@
-"""Interruptores: rede de convidados, LED dos nos, reinicio automatico, acesso por aparelho."""
+"""Interruptores: rede de convidados, LED dos nos, reinicio automatico, roaming, acesso por aparelho."""
 from __future__ import annotations
 
 from typing import Any
@@ -18,7 +18,7 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: TwibiConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback
 ) -> None:
     coord = entry.runtime_data
-    entities: list[SwitchEntity] = [GuestSwitch(coord), AutoRebootSwitch(coord)]
+    entities: list[SwitchEntity] = [GuestSwitch(coord), AutoRebootSwitch(coord), FastRoamingSwitch(coord)]
     entities += [LedSwitch(coord, sn) for sn in coord.data.nodes]
     async_add_entities(entities)
 
@@ -83,6 +83,32 @@ class AutoRebootSwitch(TwibiEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self.coordinator.async_command(lambda t: t.set_automaint(enable=False))
+
+
+class FastRoamingSwitch(TwibiEntity, SwitchEntity):
+    """'Roaming rapido' do app: o mesh leva o aparelho para o no mais perto.
+
+    Sem ele o aparelho fica preso no no em que conectou. Mudar reinicia o Wi-Fi (~60 s).
+    """
+
+    _attr_entity_category = EntityCategory.CONFIG
+
+    def __init__(self, coord) -> None:
+        super().__init__(coord, "fast_roaming")
+
+    @property
+    def is_on(self) -> bool:
+        return bool(self.coordinator.data.roaming.get("enable"))
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        return {"aviso": "mudar reinicia o Wi-Fi do Twibi (~60 s)"}
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        await self.coordinator.async_command(lambda t: t.set_roaming(True), restarts_wifi=True)
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        await self.coordinator.async_command(lambda t: t.set_roaming(False), restarts_wifi=True)
 
 
 class LedSwitch(TwibiEntity, SwitchEntity):

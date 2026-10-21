@@ -70,7 +70,8 @@ class TestDecodeFixtures(unittest.TestCase):
     def test_others(self):
         for name, req in (("wan_status", C.REQ_WAN_STATUS), ("wan_cfg", C.REQ_WAN_CFG), ("wan_line", C.REQ_WAN_LINE),
                           ("wan_rate", C.REQ_WAN_RATE), ("wlan", C.REQ_WLAN), ("guest", C.REQ_GUEST),
-                          ("macfilter", C.REQ_MACFILTER), ("automaint", C.REQ_AUTOMAINT), ("dhcp", C.REQ_DHCP)):
+                          ("macfilter", C.REQ_MACFILTER), ("automaint", C.REQ_AUTOMAINT), ("dhcp", C.REQ_DHCP),
+                          ("roaming", C.REQ_ROAMING)):
             with self.subTest(name=name):
                 self.check(name, req)
 
@@ -116,7 +117,7 @@ class FakeTwibi:
                     names = {v: k for k, v in {
                         "basic_info": C.REQ_BASIC_INFO, "nodes": C.REQ_NODES, "hosts": C.REQ_HOSTS,
                         "remarks": C.REQ_REMARKS, "guest": C.REQ_GUEST, "macfilter": C.REQ_MACFILTER,
-                        "automaint": C.REQ_AUTOMAINT}.items()}
+                        "automaint": C.REQ_AUTOMAINT, "roaming": C.REQ_ROAMING}.items()}
                     if rt in names:
                         # fixtures foram gravadas sem o prefixo de status (comandos mesh 0x1xxx)
                         resp = fixture(names[rt]) if rt < 0x1000 else struct.pack("<i", 0) + fixture(names[rt])
@@ -175,6 +176,15 @@ class TestClient(unittest.IsolatedAsyncioTestCase):
         dec = decode("Macfilter.mf_lists", self.fake.received[-1][2][8:])
         self.assertEqual(dec["mode"], 0)
         self.assertEqual(dec["rules"], [{"ethaddr": "11:22:33:44:55:66", "name": "X"}])
+
+    async def test_roaming(self):
+        async with C.TwibiClient("127.0.0.1", "segredo", port=self.port) as t:
+            self.assertTrue((await t.roaming())["enable"])
+            await t.set_roaming(False)
+        src, rt, body = self.fake.received[-1]
+        self.assertEqual(rt, C.REQ_SET_ROAMING)
+        dec = decode("Wlan.WlanRoaming", body[8:])
+        self.assertEqual(dec, {"enable": False, "timestamp": struct.unpack("<Q", body[:8])[0]})
 
 
 if __name__ == "__main__":

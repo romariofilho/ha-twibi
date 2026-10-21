@@ -11,6 +11,7 @@ GETS = {
     "wan_line": (c.REQ_WAN_LINE, None), "wan_rate": (c.REQ_WAN_RATE, None),
     "wlan": (c.REQ_WLAN, None), "guest": (c.REQ_GUEST, None), "macfilter": (c.REQ_MACFILTER, None),
     "automaint": (c.REQ_AUTOMAINT, None), "dhcp": (c.REQ_DHCP, None),
+    "roaming": (c.REQ_ROAMING, None),
 }
 
 async def main():

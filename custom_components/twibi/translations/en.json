@@ -101,6 +101,9 @@
       "auto_reboot": {
         "name": "Daily automatic restart"
       },
+      "fast_roaming": {
+        "name": "Fast roaming (restarts Wi-Fi)"
+      },
       "led": {
         "name": "LED"
       }
