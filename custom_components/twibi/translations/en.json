@@ -104,6 +104,9 @@
       "fast_roaming": {
         "name": "Fast roaming (restarts Wi-Fi)"
       },
+      "mesh_priority": {
+        "name": "Mesh priority"
+      },
       "led": {
         "name": "LED"
       }

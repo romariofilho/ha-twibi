@@ -40,6 +40,7 @@ Um dispositivo por nó do mesh (ex.: *Twibi Sala* = principal, *Twibi Cozinha*).
 | `switch` *LED* (por nó) | LED de status |
 | `switch` *Reinício automático diário* | manutenção automática do app |
 | `switch` *Roaming rápido (reinicia o Wi-Fi)* | o mesh leva cada aparelho para o nó mais perto; sem ele o aparelho fica preso no nó em que conectou. **Mudar reinicia o Wi-Fi (~60 s)** |
+| `switch` *Prioridade Mesh* | 5 GHz priorizado para o link entre os Twibis; máx. 6 aparelhos em 5 GHz por nó. Não reinicia o Wi-Fi |
 | `switch` *Acesso à rede: <aparelho>* | **desativados por padrão**; desligar = lista negra do Twibi |
 | `device_tracker` por aparelho | casa/fora pelo Twibi; atributos: nó, sinal, 2.4/5 GHz/cabo, IP reservado, bloqueado |
 
@@ -78,13 +79,14 @@ o app do HA no celular continua sendo melhor.
 | Wi-Fi de convidados liga/desliga | ✅ (não reinicia o Wi-Fi principal) |
 | Reinício automático liga/desliga | ✅ |
 | Roaming rápido | ✅ ligado em 2026-10-20 (Wi-Fi caiu ~60 s e voltou) |
+| Prioridade Mesh (0x1308/0x1309) | ✅ ligada em 2026-10-20, sem queda do Wi-Fi. O 0x170F (`HighDeviceConfig`, "Priorização Mesh" no app antigo) não é suportado no fw 1.1.9 |
 | Bloquear/desbloquear aparelho | ✅ entra/sai da lista negra; em 2026-10-20 bloquear a TV Quarto por ~12 s fez ela reconectar (e trocar de nó) — não reinicia o Wi-Fi |
 | Reiniciar sistema | ❌ **não suportado** pelo Twibi Giga fw 1.1.9: o comando 0x0103 é ignorado (não está no `supt_mod_flag`) e nem o app oferece. Botão removido em 2026-10-18. A manutenção agendada também não serve de atalho (agendar para daqui a 2 min não reiniciou) |
 
 ## Desenvolvimento
 
 ```bash
-python3 -m unittest discover -s tests -v      # 15 testes, sem HA, usando respostas gravadas
+python3 -m unittest discover -s tests -v      # 16 testes, sem HA, usando respostas gravadas
 TWIBI_HOST=10.1.1.1 TWIBI_PASSWORD=... python3 tests/dump_fixtures.py   # regrava as fixtures (anonimize antes de commitar!)
 ```
 

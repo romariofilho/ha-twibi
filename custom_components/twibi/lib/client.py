@@ -46,6 +46,8 @@ REQ_SET_GUEST = 0x1302
 REQ_GUEST = 0x1303
 REQ_ROAMING = 0x1304
 REQ_SET_ROAMING = 0x1305     # reinicia o Wi-Fi (~60 s)
+REQ_MESH_PRIORITY = 0x1308   # "Prioridade Mesh" do app (Wlan.DeviceSet)
+REQ_SET_MESH_PRIORITY = 0x1309
 REQ_MACFILTER = 0x1500
 REQ_SET_MACFILTER = 0x1501
 REQ_AUTOMAINT = 0x1704
@@ -63,6 +65,7 @@ RESPONSE_MSG = {
     REQ_WLAN: "Wlan.WlanCfgAll",
     REQ_GUEST: "Wlan.WlanCfgAll",
     REQ_ROAMING: "Wlan.WlanRoaming",
+    REQ_MESH_PRIORITY: "Wlan.DeviceSet",
     REQ_MACFILTER: "Macfilter.mf_lists",
     REQ_AUTOMAINT: "Advance.AutoMaint",
     REQ_DHCP: "Advance.DhcpCfg",
@@ -211,6 +214,9 @@ class TwibiClient:
     async def roaming(self) -> dict[str, Any]:
         return await self.request(REQ_ROAMING)
 
+    async def mesh_priority(self) -> dict[str, Any]:
+        return await self.request(REQ_MESH_PRIORITY)
+
     async def macfilter(self) -> dict[str, Any]:
         return await self.request(REQ_MACFILTER)
 
@@ -252,6 +258,11 @@ class TwibiClient:
     async def set_roaming(self, enable: bool) -> None:
         """Roaming rapido do mesh. ATENCAO: o Twibi reinicia o Wi-Fi (~60 s)."""
         await self.command(REQ_SET_ROAMING, "Wlan.WlanRoaming", {"enable": enable})
+
+    async def set_mesh_priority(self, enable: bool) -> None:
+        """Prioridade Mesh: 5 GHz reservado ao link entre os Twibis, max. 6 aparelhos em
+        5 GHz por no. Nao reinicia o Wi-Fi (testado 2026-10-20)."""
+        await self.command(REQ_SET_MESH_PRIORITY, "Wlan.DeviceSet", {"limit_5Gdevice_switch": enable})
 
     async def blocked(self) -> dict[str, str]:
         """Aparelhos na lista negra {mac: nome}."""

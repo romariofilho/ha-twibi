@@ -1,4 +1,4 @@
-"""Interruptores: rede de convidados, LED dos nos, reinicio automatico, roaming, acesso por aparelho."""
+"""Interruptores: rede de convidados, LED dos nos, reinicio automatico, roaming, prioridade mesh, acesso por aparelho."""
 from __future__ import annotations
 
 from typing import Any
@@ -18,7 +18,8 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: TwibiConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback
 ) -> None:
     coord = entry.runtime_data
-    entities: list[SwitchEntity] = [GuestSwitch(coord), AutoRebootSwitch(coord), FastRoamingSwitch(coord)]
+    entities: list[SwitchEntity] = [GuestSwitch(coord), AutoRebootSwitch(coord), FastRoamingSwitch(coord),
+                                    MeshPrioritySwitch(coord)]
     entities += [LedSwitch(coord, sn) for sn in coord.data.nodes]
     async_add_entities(entities)
 
@@ -109,6 +110,26 @@ class FastRoamingSwitch(TwibiEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self.coordinator.async_command(lambda t: t.set_roaming(False), restarts_wifi=True)
+
+
+class MeshPrioritySwitch(TwibiEntity, SwitchEntity):
+    """'Prioridade Mesh' do app: prioriza o 5 GHz para o link entre os Twibis e limita
+    a 6 os aparelhos em 5 GHz por no. Nao reinicia o Wi-Fi."""
+
+    _attr_entity_category = EntityCategory.CONFIG
+
+    def __init__(self, coord) -> None:
+        super().__init__(coord, "mesh_priority")
+
+    @property
+    def is_on(self) -> bool:
+        return bool(self.coordinator.data.mesh_priority.get("limit_5Gdevice_switch"))
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        await self.coordinator.async_command(lambda t: t.set_mesh_priority(True))
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        await self.coordinator.async_command(lambda t: t.set_mesh_priority(False))
 
 
 class LedSwitch(TwibiEntity, SwitchEntity):
