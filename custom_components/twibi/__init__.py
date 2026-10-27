@@ -77,6 +77,15 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
         mac = call.data[ATTR_MAC]
         await coord.async_command(lambda t: t.set_blocked(mac, False))
 
+    async def iot_assistant(call: ServiceCall) -> None:
+        coord = _coordinator(hass)
+        mac = call.data[ATTR_MAC].upper()
+        host = coord.data.hosts.get(mac, {}) if coord.data else {}
+        ip = host.get("ipaddr")
+        if not ip or not host.get("online"):
+            raise ServiceValidationError(f"{mac} nao esta conectado ao Twibi")
+        await coord.async_command(lambda t: t.iot_assistant(ip))
+
     async def list_devices(call: ServiceCall) -> dict:
         coord = _coordinator(hass)
         data = coord.data
@@ -100,6 +109,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     hass.services.async_register(DOMAIN, "rename_devices", rename_devices, SCHEMA_RENAME_MANY)
     hass.services.async_register(DOMAIN, "block_device", block_device, SCHEMA_MAC)
     hass.services.async_register(DOMAIN, "unblock_device", unblock_device, SCHEMA_MAC)
+    hass.services.async_register(DOMAIN, "iot_assistant", iot_assistant, SCHEMA_MAC)
     hass.services.async_register(
         DOMAIN, "list_devices", list_devices, vol.Schema({}), supports_response=SupportsResponse.ONLY
     )

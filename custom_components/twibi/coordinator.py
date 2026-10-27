@@ -36,6 +36,9 @@ class TwibiData:
     automaint: dict[str, Any] = field(default_factory=dict)
     roaming: dict[str, Any] = field(default_factory=dict)
     mesh_priority: dict[str, Any] = field(default_factory=dict)
+    dual_band: dict[str, Any] = field(default_factory=dict)
+    upnp: dict[str, Any] = field(default_factory=dict)
+    qos: dict[str, Any] = field(default_factory=dict)
 
     def name_for(self, mac: str) -> str:
         """Apelido do Twibi; senao hostname; senao o MAC."""
@@ -96,6 +99,9 @@ class TwibiCoordinator(DataUpdateCoordinator[TwibiData]):
                 data.automaint = await t.automaint()
                 data.roaming = await t.roaming()
                 data.mesh_priority = await t.mesh_priority()
+                data.dual_band = await t.dual_band()
+                data.upnp = await t.upnp()
+                data.qos = await t.qos()
         except TwibiAuthError as err:
             raise ConfigEntryAuthFailed(str(err)) from err
         except TwibiError as err:

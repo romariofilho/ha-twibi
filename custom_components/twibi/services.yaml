@@ -45,4 +45,10 @@ unblock_device:
       required: true
       selector:
         text:
+iot_assistant:
+  fields:
+    mac:
+      required: true
+      selector:
+        text:
 list_devices:

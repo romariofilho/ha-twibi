@@ -41,6 +41,9 @@ Um dispositivo por nó do mesh (ex.: *Twibi Sala* = principal, *Twibi Cozinha*).
 | `switch` *Reinício automático diário* | manutenção automática do app |
 | `switch` *Roaming rápido (reinicia o Wi-Fi)* | o mesh leva cada aparelho para o nó mais perto; sem ele o aparelho fica preso no nó em que conectou. **Mudar reinicia o Wi-Fi (~60 s)** |
 | `switch` *Prioridade Mesh* | 5 GHz priorizado para o link entre os Twibis; máx. 6 aparelhos em 5 GHz por nó. Não reinicia o Wi-Fi |
+| `switch` *Prioridade Dual Band (reinicia o Wi-Fi)* | o Twibi empurra para 5 GHz quem suporta; o app avisa que aparelhos antigos podem se confundir. **Mudar reinicia o Wi-Fi (~35 s)** |
+| `switch` *Controle de Banda* | QoS do app (jogos e navegação com prioridade); mantém os limites gravados. Não reinicia o Wi-Fi |
+| `switch` *UPnP* | aparelhos abrem portas no roteador sozinhos. Não reinicia o Wi-Fi |
 | `switch` *Acesso à rede: <aparelho>* | **desativados por padrão**; desligar = lista negra do Twibi |
 | `device_tracker` por aparelho | casa/fora pelo Twibi; atributos: nó, sinal, 2.4/5 GHz/cabo, IP reservado, bloqueado |
 
@@ -63,7 +66,7 @@ o app do HA no celular continua sendo melhor.
 ## Avisos
 
 - **O relógio do Twibi não acerta a hora pela internet** (fw 1.1.9): ele conta a partir de 01/05/2011 00:00 desde que liga. A "manutenção automática às 03:00" na prática é "3 h depois de ligar, e a cada 24 h" — e com `delay` ligado ela espera a rede ficar ociosa, então pode nem acontecer.
-- **Reserva de IP e Roaming rápido reiniciam o Wi-Fi do Twibi** (~30–60 s). Se o próprio HA estiver no Wi-Fi, ele cai junto
+- **Reserva de IP, Roaming rápido e Prioridade Dual Band reiniciam o Wi-Fi do Twibi** (~30–60 s). Se o próprio HA estiver no Wi-Fi, ele cai junto
   (o HAOS às vezes não reconecta sozinho — veja o "vigia do Wi-Fi" no repositório pai).
 - O comando de **reset de fábrica (0x0102) é bloqueado** na biblioteca de propósito.
 - A senha de login fica salva na entrada da integração (e portanto nos backups do HA).
@@ -79,6 +82,9 @@ o app do HA no celular continua sendo melhor.
 | Wi-Fi de convidados liga/desliga | ✅ (não reinicia o Wi-Fi principal) |
 | Reinício automático liga/desliga | ✅ |
 | Roaming rápido | ✅ ligado em 2026-10-20 (Wi-Fi caiu ~60 s e voltou) |
+| Prioridade Dual Band (0x1725/0x1726) | ✅ regravado ligado em 2026-10-21: Wi-Fi caiu ~35 s |
+| UPnP (0x1702/0x1703), Controle de Banda (0x1708/0x1709) | ✅ regravados com o valor atual em 2026-10-21, sem queda do Wi-Fi |
+| Assistente IoT (0x170B) | ✅ 2026-10-21: o notebook saiu de 5 GHz para 2,4 GHz em menos de 5 s. A leitura (0x170A) devolve sempre `conntype: 0` (inútil) |
 | Prioridade Mesh (0x1308/0x1309) | ✅ ligada em 2026-10-20, sem queda do Wi-Fi. O 0x170F (`HighDeviceConfig`, "Priorização Mesh" no app antigo) não é suportado no fw 1.1.9 |
 | Bloquear/desbloquear aparelho | ✅ entra/sai da lista negra; em 2026-10-20 bloquear a TV Quarto por ~12 s fez ela reconectar (e trocar de nó) — não reinicia o Wi-Fi |
 | Reiniciar sistema | ❌ **não suportado** pelo Twibi Giga fw 1.1.9: o comando 0x0103 é ignorado (não está no `supt_mod_flag`) e nem o app oferece. Botão removido em 2026-10-18. A manutenção agendada também não serve de atalho (agendar para daqui a 2 min não reiniciou) |
@@ -86,7 +92,7 @@ o app do HA no celular continua sendo melhor.
 ## Desenvolvimento
 
 ```bash
-python3 -m unittest discover -s tests -v      # 16 testes, sem HA, usando respostas gravadas
+python3 -m unittest discover -s tests -v      # 18 testes, sem HA, usando respostas gravadas
 TWIBI_HOST=10.1.1.1 TWIBI_PASSWORD=... python3 tests/dump_fixtures.py   # regrava as fixtures (anonimize antes de commitar!)
 ```
 

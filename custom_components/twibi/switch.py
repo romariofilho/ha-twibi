@@ -1,4 +1,5 @@
-"""Interruptores: rede de convidados, LED dos nos, reinicio automatico, roaming, prioridade mesh, acesso por aparelho."""
+"""Interruptores: rede de convidados, LED dos nos, reinicio automatico, roaming, prioridades mesh/dual band,
+UPnP, controle de banda, acesso por aparelho."""
 from __future__ import annotations
 
 from typing import Any
@@ -19,7 +20,8 @@ async def async_setup_entry(
 ) -> None:
     coord = entry.runtime_data
     entities: list[SwitchEntity] = [GuestSwitch(coord), AutoRebootSwitch(coord), FastRoamingSwitch(coord),
-                                    MeshPrioritySwitch(coord)]
+                                    MeshPrioritySwitch(coord), DualBandSwitch(coord), UpnpSwitch(coord),
+                                    QosSwitch(coord)]
     entities += [LedSwitch(coord, sn) for sn in coord.data.nodes]
     async_add_entities(entities)
 
@@ -130,6 +132,68 @@ class MeshPrioritySwitch(TwibiEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self.coordinator.async_command(lambda t: t.set_mesh_priority(False))
+
+
+class DualBandSwitch(TwibiEntity, SwitchEntity):
+    """'Prioridade Dual Band' do app: o Twibi empurra para 5 GHz quem suporta. O app avisa
+    que aparelhos antigos podem se confundir. Mudar reinicia o Wi-Fi (~35 s)."""
+
+    _attr_entity_category = EntityCategory.CONFIG
+
+    def __init__(self, coord) -> None:
+        super().__init__(coord, "dual_band")
+
+    @property
+    def is_on(self) -> bool:
+        return bool(self.coordinator.data.dual_band.get("dual_freq_switch"))
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        return {"aviso": "mudar reinicia o Wi-Fi do Twibi (~35 s)"}
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        await self.coordinator.async_command(lambda t: t.set_dual_band(True), restarts_wifi=True)
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        await self.coordinator.async_command(lambda t: t.set_dual_band(False), restarts_wifi=True)
+
+
+class UpnpSwitch(TwibiEntity, SwitchEntity):
+    """UPnP (aparelhos abrem portas sozinhos). Nao reinicia o Wi-Fi."""
+
+    _attr_entity_category = EntityCategory.CONFIG
+
+    def __init__(self, coord) -> None:
+        super().__init__(coord, "upnp")
+
+    @property
+    def is_on(self) -> bool:
+        return bool(self.coordinator.data.upnp.get("status"))
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        await self.coordinator.async_command(lambda t: t.set_upnp(True))
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        await self.coordinator.async_command(lambda t: t.set_upnp(False))
+
+
+class QosSwitch(TwibiEntity, SwitchEntity):
+    """'Controle de Banda' do app: jogos e navegacao com prioridade. Nao reinicia o Wi-Fi."""
+
+    _attr_entity_category = EntityCategory.CONFIG
+
+    def __init__(self, coord) -> None:
+        super().__init__(coord, "qos")
+
+    @property
+    def is_on(self) -> bool:
+        return bool(self.coordinator.data.qos.get("status"))
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        await self.coordinator.async_command(lambda t: t.set_qos(True))
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        await self.coordinator.async_command(lambda t: t.set_qos(False))
 
 
 class LedSwitch(TwibiEntity, SwitchEntity):

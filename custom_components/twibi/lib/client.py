@@ -48,6 +48,13 @@ REQ_ROAMING = 0x1304
 REQ_SET_ROAMING = 0x1305     # reinicia o Wi-Fi (~60 s)
 REQ_MESH_PRIORITY = 0x1308   # "Prioridade Mesh" do app (Wlan.DeviceSet)
 REQ_SET_MESH_PRIORITY = 0x1309
+REQ_UPNP = 0x1702
+REQ_SET_UPNP = 0x1703
+REQ_QOS = 0x1708              # "Controle de Banda" do app (Advance.QosRule)
+REQ_SET_QOS = 0x1709
+REQ_SET_IOT_ASSIST = 0x170B   # "Assistente IoT": aparelho (por IP) fica em 2,4 GHz por 30 min
+REQ_DUAL_BAND = 0x1725        # "Prioridade Dual Band" (Advance.DualFrequency)
+REQ_SET_DUAL_BAND = 0x1726    # reinicia o Wi-Fi (~35 s)
 REQ_MACFILTER = 0x1500
 REQ_SET_MACFILTER = 0x1501
 REQ_AUTOMAINT = 0x1704
@@ -66,6 +73,9 @@ RESPONSE_MSG = {
     REQ_GUEST: "Wlan.WlanCfgAll",
     REQ_ROAMING: "Wlan.WlanRoaming",
     REQ_MESH_PRIORITY: "Wlan.DeviceSet",
+    REQ_UPNP: "Advance.UPnPCfg",
+    REQ_QOS: "Advance.QosRule",
+    REQ_DUAL_BAND: "Advance.DualFrequency",
     REQ_MACFILTER: "Macfilter.mf_lists",
     REQ_AUTOMAINT: "Advance.AutoMaint",
     REQ_DHCP: "Advance.DhcpCfg",
@@ -217,6 +227,15 @@ class TwibiClient:
     async def mesh_priority(self) -> dict[str, Any]:
         return await self.request(REQ_MESH_PRIORITY)
 
+    async def upnp(self) -> dict[str, Any]:
+        return await self.request(REQ_UPNP)
+
+    async def qos(self) -> dict[str, Any]:
+        return await self.request(REQ_QOS)
+
+    async def dual_band(self) -> dict[str, Any]:
+        return await self.request(REQ_DUAL_BAND)
+
     async def macfilter(self) -> dict[str, Any]:
         return await self.request(REQ_MACFILTER)
 
@@ -263,6 +282,26 @@ class TwibiClient:
         """Prioridade Mesh: 5 GHz reservado ao link entre os Twibis, max. 6 aparelhos em
         5 GHz por no. Nao reinicia o Wi-Fi (testado 2026-10-20)."""
         await self.command(REQ_SET_MESH_PRIORITY, "Wlan.DeviceSet", {"limit_5Gdevice_switch": enable})
+
+    async def set_upnp(self, enable: bool) -> None:
+        """UPnP. Nao reinicia o Wi-Fi (testado 2026-10-21)."""
+        await self.command(REQ_SET_UPNP, "Advance.UPnPCfg", {"status": enable})
+
+    async def set_qos(self, enable: bool) -> None:
+        """Controle de Banda (jogos e navegacao com prioridade), mantendo os limites atuais.
+        Nao reinicia o Wi-Fi (testado 2026-10-21)."""
+        cur = await self.qos()
+        data = {k: cur[k] for k in ("up", "down") if k in cur}
+        await self.command(REQ_SET_QOS, "Advance.QosRule", {**data, "status": enable})
+
+    async def set_dual_band(self, enable: bool) -> None:
+        """Prioridade Dual Band (o Twibi empurra aparelhos para 5 GHz). Reinicia o Wi-Fi (~35 s)."""
+        await self.command(REQ_SET_DUAL_BAND, "Advance.DualFrequency", {"dual_freq_switch": 1 if enable else 0})
+
+    async def iot_assistant(self, ip: str) -> None:
+        """Assistente IoT: o aparelho com esse IP passa a usar so 2,4 GHz por 30 min
+        (para configurar aparelhos IoT pelo celular). Nao reinicia o Wi-Fi."""
+        await self.command(REQ_SET_IOT_ASSIST, "Advance.DeviceAssistant", {"ip": ip})
 
     async def blocked(self) -> dict[str, str]:
         """Aparelhos na lista negra {mac: nome}."""

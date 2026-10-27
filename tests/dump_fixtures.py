@@ -12,6 +12,7 @@ GETS = {
     "wlan": (c.REQ_WLAN, None), "guest": (c.REQ_GUEST, None), "macfilter": (c.REQ_MACFILTER, None),
     "automaint": (c.REQ_AUTOMAINT, None), "dhcp": (c.REQ_DHCP, None),
     "roaming": (c.REQ_ROAMING, None), "mesh_priority": (c.REQ_MESH_PRIORITY, None),
+    "upnp": (c.REQ_UPNP, None), "qos": (c.REQ_QOS, None), "dual_band": (c.REQ_DUAL_BAND, None),
 }
 
 async def main():

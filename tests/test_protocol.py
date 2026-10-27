@@ -71,7 +71,8 @@ class TestDecodeFixtures(unittest.TestCase):
         for name, req in (("wan_status", C.REQ_WAN_STATUS), ("wan_cfg", C.REQ_WAN_CFG), ("wan_line", C.REQ_WAN_LINE),
                           ("wan_rate", C.REQ_WAN_RATE), ("wlan", C.REQ_WLAN), ("guest", C.REQ_GUEST),
                           ("macfilter", C.REQ_MACFILTER), ("automaint", C.REQ_AUTOMAINT), ("dhcp", C.REQ_DHCP),
-                          ("roaming", C.REQ_ROAMING), ("mesh_priority", C.REQ_MESH_PRIORITY)):
+                          ("roaming", C.REQ_ROAMING), ("mesh_priority", C.REQ_MESH_PRIORITY),
+                          ("upnp", C.REQ_UPNP), ("qos", C.REQ_QOS), ("dual_band", C.REQ_DUAL_BAND)):
             with self.subTest(name=name):
                 self.check(name, req)
 
@@ -118,7 +119,8 @@ class FakeTwibi:
                         "basic_info": C.REQ_BASIC_INFO, "nodes": C.REQ_NODES, "hosts": C.REQ_HOSTS,
                         "remarks": C.REQ_REMARKS, "guest": C.REQ_GUEST, "macfilter": C.REQ_MACFILTER,
                         "automaint": C.REQ_AUTOMAINT, "roaming": C.REQ_ROAMING,
-                        "mesh_priority": C.REQ_MESH_PRIORITY}.items()}
+                        "mesh_priority": C.REQ_MESH_PRIORITY, "upnp": C.REQ_UPNP, "qos": C.REQ_QOS,
+                        "dual_band": C.REQ_DUAL_BAND}.items()}
                     if rt in names:
                         # fixtures foram gravadas sem o prefixo de status (comandos mesh 0x1xxx)
                         resp = fixture(names[rt]) if rt < 0x1000 else struct.pack("<i", 0) + fixture(names[rt])
@@ -195,6 +197,28 @@ class TestClient(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(rt, C.REQ_SET_MESH_PRIORITY)
         dec = decode("Wlan.DeviceSet", body[8:])
         self.assertEqual(dec, {"limit_5Gdevice_switch": False, "timestamp": struct.unpack("<Q", body[:8])[0]})
+
+    async def test_dual_band_upnp_qos(self):
+        async with C.TwibiClient("127.0.0.1", "segredo", port=self.port) as t:
+            self.assertEqual((await t.dual_band())["dual_freq_switch"], 1)
+            await t.set_dual_band(False)
+            _s, rt, body = self.fake.received[-1]
+            self.assertEqual((rt, decode("Advance.DualFrequency", body[8:])["dual_freq_switch"]),
+                             (C.REQ_SET_DUAL_BAND, 0))
+            self.assertTrue((await t.upnp())["status"])
+            await t.set_upnp(False)
+            _s, rt, body = self.fake.received[-1]
+            self.assertEqual((rt, decode("Advance.UPnPCfg", body[8:])["status"]), (C.REQ_SET_UPNP, False))
+            await t.set_qos(True)  # preserva os limites lidos antes
+            _s, rt, body = self.fake.received[-1]
+            dec = decode("Advance.QosRule", body[8:])
+            self.assertEqual((rt, dec["status"], dec["up"], dec["down"]), (C.REQ_SET_QOS, True, 1024000, 1024000))
+
+    async def test_iot_assistant(self):
+        async with C.TwibiClient("127.0.0.1", "segredo", port=self.port) as t:
+            await t.iot_assistant("10.1.1.50")
+        _s, rt, body = self.fake.received[-1]
+        self.assertEqual((rt, decode("Advance.DeviceAssistant", body[8:])), (C.REQ_SET_IOT_ASSIST, {"ip": "10.1.1.50"}))
 
 
 if __name__ == "__main__":

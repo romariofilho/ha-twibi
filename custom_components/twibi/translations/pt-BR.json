@@ -107,6 +107,15 @@
       "mesh_priority": {
         "name": "Prioridade Mesh"
       },
+      "dual_band": {
+        "name": "Prioridade Dual Band (reinicia o Wi-Fi)"
+      },
+      "upnp": {
+        "name": "UPnP"
+      },
+      "qos": {
+        "name": "Controle de Banda"
+      },
       "led": {
         "name": "LED"
       }
@@ -178,6 +187,16 @@
         "mac": {
           "name": "MAC",
           "description": "MAC do aparelho"
+        }
+      }
+    },
+    "iot_assistant": {
+      "name": "Forçar 2,4 GHz (Assistente IoT)",
+      "description": "Mantém o aparelho em 2,4 GHz por 30 minutos, para configurar aparelhos IoT que só funcionam em 2,4 GHz.",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "MAC do aparelho (precisa estar conectado)"
         }
       }
     },

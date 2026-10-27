@@ -107,6 +107,15 @@
       "mesh_priority": {
         "name": "Mesh priority"
       },
+      "dual_band": {
+        "name": "Dual band priority (restarts Wi-Fi)"
+      },
+      "upnp": {
+        "name": "UPnP"
+      },
+      "qos": {
+        "name": "Bandwidth control"
+      },
       "led": {
         "name": "LED"
       }
@@ -178,6 +187,16 @@
         "mac": {
           "name": "MAC",
           "description": "Device MAC"
+        }
+      }
+    },
+    "iot_assistant": {
+      "name": "Force 2.4 GHz (IoT assistant)",
+      "description": "Keeps the device on 2.4 GHz for 30 minutes, to set up IoT devices that only support 2.4 GHz.",
+      "fields": {
+        "mac": {
+          "name": "MAC",
+          "description": "Device MAC (must be online)"
         }
       }
     },
