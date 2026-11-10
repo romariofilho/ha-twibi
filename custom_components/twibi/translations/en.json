@@ -87,6 +87,13 @@
       "node_backhaul": {
         "name": "Mesh link signal"
       },
+      "node_backhaul_type": {
+        "name": "Mesh link",
+        "state": {
+          "wired": "Wired",
+          "wireless": "Wi-Fi"
+        }
+      },
       "node_boot": {
         "name": "Up since"
       },

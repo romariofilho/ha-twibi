@@ -34,7 +34,8 @@ Um dispositivo por nó do mesh (ex.: *Twibi Sala* = principal, *Twibi Cozinha*).
 | `sensor` *IPs reservados* | quantas reservas DHCP existem |
 | `sensor` *Reinício automático* | horário da "manutenção automática" (ou `desligado`) |
 | `sensor` *Aparelhos neste nó* (por nó) | clientes associados àquele nó |
-| `sensor` *Sinal do link mesh* (por nó satélite) | RSSI do backhaul até o nó principal |
+| `sensor` *Link mesh* (por nó satélite) | `Cabo` ou `Wi-Fi` (campo `wired_en`). Útil para avisar quando um backhaul cabeado cai de volta para o Wi-Fi |
+| `sensor` *Sinal do link mesh* (por nó satélite) | RSSI de rádio até o nó vizinho. O Twibi continua informando esse valor mesmo com o link por cabo |
 | `sensor` *Ligado desde* (por nó) | último boot do nó |
 | `switch` *Wi-Fi de convidados* | liga/desliga a rede de convidados (mantém SSID/senha/limite de tempo) |
 | `switch` *LED* (por nó) | LED de status |

@@ -87,6 +87,13 @@
       "node_backhaul": {
         "name": "Sinal do link mesh"
       },
+      "node_backhaul_type": {
+        "name": "Link mesh",
+        "state": {
+          "wired": "Cabo",
+          "wireless": "Wi-Fi"
+        }
+      },
       "node_boot": {
         "name": "Ligado desde"
       },

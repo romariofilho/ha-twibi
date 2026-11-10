@@ -60,6 +60,7 @@ async def async_setup_entry(
         entities += [
             NodeClientsSensor(coord, serial),
             NodeBackhaulSensor(coord, serial),
+            NodeBackhaulTypeSensor(coord, serial),
             NodeUptimeSensor(coord, serial),
             NodeIpSensor(coord, serial),
         ]
@@ -99,8 +100,18 @@ class NodeClientsSensor(TwibiEntity, SensorEntity):
                    if h.get("online") and h.get("assoc_sn") == self.serial)
 
 
+def _uplink(node: dict) -> dict:
+    """Link do no com o resto do mesh (no satelite, o primeiro item e o no ao qual ele se liga)."""
+    lst = node.get("assoc_list") or []
+    return lst[0] if lst else {}
+
+
 class NodeBackhaulSensor(TwibiEntity, SensorEntity):
-    """Sinal do link entre este no e o no ao qual ele se conecta (so satelites)."""
+    """Sinal de radio entre este no e o no ao qual ele se conecta (so satelites).
+
+    O Twibi continua informando o RSSI mesmo com o link por cabo (os radios se enxergam),
+    entao o valor fica disponivel nos dois casos; o tipo de link esta em node_backhaul_type.
+    """
 
     _attr_device_class = SensorDeviceClass.SIGNAL_STRENGTH
     _attr_native_unit_of_measurement = SIGNAL_STRENGTH_DECIBELS_MILLIWATT
@@ -113,29 +124,57 @@ class NodeBackhaulSensor(TwibiEntity, SensorEntity):
         self._attr_entity_registry_enabled_default = coord.data.nodes.get(serial, {}).get("role") != 1
 
     @property
-    def _link(self) -> dict:
-        lst = self.node.get("assoc_list") or []
-        return lst[0] if lst else {}
-
-    @property
     def available(self) -> bool:
-        return super().available and bool(self._link) and not self._link.get("wired_en")
+        return super().available and bool(_uplink(self.node))
 
     @property
     def native_value(self) -> int | None:
-        link = self._link
+        link = _uplink(self.node)
         vals = [v for v in (link.get("wl5g_rssi"), link.get("wl2g_rssi")) if v]
         return max(vals) if vals else None
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
-        link = self._link
+        link = _uplink(self.node)
         return {
             "conectado_a": self.coordinator.data.node_name(link["assoc_sn"]) if link.get("assoc_sn") else None,
             "rssi_2g": link.get("wl2g_rssi"),
             "rssi_5g": link.get("wl5g_rssi"),
             "cabo": bool(link.get("wired_en")),
         }
+
+
+class NodeBackhaulTypeSensor(TwibiEntity, SensorEntity):
+    """Tipo do link mesh do no: cabo ou Wi-Fi (so satelites).
+
+    Com o cabo solto, a porta queimada ou o switch reiniciando, o mesh volta sozinho ao
+    Wi-Fi sem avisar; este sensor permite alertar.
+    """
+
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = ["wired", "wireless"]
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(self, coord, serial: str) -> None:
+        super().__init__(coord, "node_backhaul_type", serial)
+        self._attr_entity_registry_enabled_default = coord.data.nodes.get(serial, {}).get("role") != 1
+
+    @property
+    def available(self) -> bool:
+        return super().available and bool(_uplink(self.node))
+
+    @property
+    def native_value(self) -> str:
+        return "wired" if _uplink(self.node).get("wired_en") else "wireless"
+
+    @property
+    def icon(self) -> str:
+        return "mdi:ethernet" if self.native_value == "wired" else "mdi:wifi"
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        link = _uplink(self.node)
+        return {"conectado_a": self.coordinator.data.node_name(link["assoc_sn"]) if link.get("assoc_sn") else None}
 
 
 class NodeUptimeSensor(TwibiEntity, SensorEntity):
